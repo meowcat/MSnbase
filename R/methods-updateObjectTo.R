@@ -9,6 +9,8 @@
 ##         Spectrum 1)
 ## Version 0.3.0. -> 0.4.0
 ## Change: Spectrum2 get new slot "smoothed" slot
+## Version 0.5.0:
+## Change: Spectrum gets peakAnnotations and metadata slots 
 
 setMethod("updateObject", signature(object = "Spectrum"),
           function(object, ..., verbose = isMSnbaseVerbose()) {
@@ -19,9 +21,11 @@ setMethod("updateObject", signature(object = "Spectrum"),
               else {
                   to <- new(class(object))
                   if (object@.__classVersion__["Spectrum2"] == "0.1.0") {
-                      torm <- c("smoothed", "polarity")
+                      torm <- c("smoothed", "polarity", "peakAnnotations", "metadata")
                   } else if (object@.__classVersion__["Spectrum2"] == "0.2.0") {
-                      torm <- "smoothed"
+                      torm <- c("smoothed", "peakAnnotations", "metadata")
+                  } else if (object@.__classVersion__["Spectrum2"] == "0.4.0") {
+                      torm <- c("peakAnnotations", "metadata")
                   }
                   for (sl in .slotNames0(object, torm))
                       slot(to, sl) <- slot(object, sl)

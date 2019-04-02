@@ -8,7 +8,7 @@
 ## version should be defined as NA_character_.
 
 ClassVersions <- c(
-    Spectrum = "0.4.0",
+    Spectrum = "0.5.0",
     Spectrum1 = "0.2.0",
     Spectrum2 = "0.2.0")
 
