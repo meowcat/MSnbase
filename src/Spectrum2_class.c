@@ -376,7 +376,8 @@ SEXP Multi_Spectrum2_constructor_mz_sorted(SEXP msLevel,
 					    PROTECT(ScalarReal(p_precursorIntensity[i])),
 					    PROTECT(ScalarInteger(p_precursorCharge[i])),
 					    PROTECT(ScalarReal(p_collisionEnergy[i])),
-					    peakAnnotations, metadata,
+					    VECTOR_ELT(peakAnnotations, i),
+					    VECTOR_ELT(metadata, i),
 					    versions));
     UNPROTECT(19);
     startN = startN + currentN;
@@ -496,7 +497,8 @@ SEXP Multi_Spectrum2_constructor_mz_sorted_memsafe(SEXP msLevel,
 					      PROTECT(ScalarReal(p_precursorIntensity[i])),
 					      PROTECT(ScalarInteger(p_precursorCharge[i])),
 					      PROTECT(ScalarReal(p_collisionEnergy[i])),
-					      peakAnnotations, metadata)
+					      VECTOR_ELT(peakAnnotations, i),
+					      VECTOR_ELT(metadata, i))
     );
     SET_VECTOR_ELT(out, i, spectrum);
     UNPROTECT(20); /*cMz, cIntensity, orderMz, spectrum*/

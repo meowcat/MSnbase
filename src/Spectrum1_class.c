@@ -258,7 +258,8 @@ SEXP Multi_Spectrum1_constructor_mz_sorted(SEXP msLevel, SEXP peaksCount,
 					    PROTECT(ScalarLogical(p_centroided[i])),
 					    PROTECT(ScalarLogical(p_smoothed[i])),
 					    PROTECT(ScalarInteger(p_polarity[i])),
-					    peakAnnotations, metadata,
+					    VECTOR_ELT(peakAnnotations, i),
+					    VECTOR_ELT(metadata, i),
 					    versions));
     UNPROTECT(12);
     startN = startN + currentN;

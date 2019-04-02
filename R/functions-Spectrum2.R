@@ -219,6 +219,24 @@ Spectra2_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
         if (length(collisionEnergy) != nvals)
             stop("Length of 'collisionEnergy' has to match the length of 'nvalues'!")
     }
+    
+    # metadata and peakAnnotations
+    if (!length(metadata)) {
+      metadata <- replicate(nvals, list())
+    } else {
+      if (length(metadata) != nvals)
+        stop("Length of 'metadata' has to match length of 'nvalues'!")
+    }
+    if (!length(peakAnnotations)) {
+      peakAnnotations <- replicate(nvals, data.frame())
+    } else {
+      if (length(peakAnnotations) != nvals)
+        stop("Length of 'peakAnnotations' has to match length of 'nvalues'!")
+    }
+    
+    
+    
+    
     ## Ensure that we have the correct data types before passing to C
     if (!is.integer(msLevel)) msLevel <- as.integer(msLevel)
     if (!is.integer(peaksCount)) peaksCount <- as.integer(peaksCount)
@@ -238,6 +256,10 @@ Spectra2_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
     if (!is.double(precursorIntensity)) precursorIntensity <- as.double(precursorIntensity)
     if (!is.integer(precursorCharge)) precursorCharge <- as.integer(precursorCharge)
     if (!is.double(collisionEnergy)) collisionEnergy <- as.double(collisionEnergy)
+    if (!all(unlist(lapply(peakAnnotations, is.data.frame))))
+      peakAnnotations <- lapply(peakAnnotations, as.data.frame)
+    if (!all(unlist(lapply(metadata, is.list))))
+      metadata <- lapply(metadata, as.list)
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum2 = getClassVersionString("Spectrum2"))

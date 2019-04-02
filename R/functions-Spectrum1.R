@@ -176,6 +176,21 @@ Spectra1_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
         if (length(smoothed) != nvals)
             stop("Length of 'smoothed' has to match length of 'nvalues'!")
     }
+    
+    # metadata and peakAnnotations
+    if (!length(metadata)) {
+      metadata <- replicate(nvals, list())
+    } else {
+      if (length(metadata) != nvals)
+        stop("Length of 'metadata' has to match length of 'nvalues'!")
+    }
+    if (!length(peakAnnotations)) {
+      peakAnnotations <- replicate(nvals, data.frame())
+    } else {
+      if (length(peakAnnotations) != nvals)
+        stop("Length of 'peakAnnotations' has to match length of 'nvalues'!")
+    }
+    
     ## Ensure the arguments are in correct format
     if (!is.integer(peaksCount)) peaksCount <- as.integer(peaksCount)
     if (!is.double(rt)) rt <- as.double(rt)
@@ -188,8 +203,11 @@ Spectra1_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
     if (!is.logical(centroided)) centroided <- as.logical(centroided)
     if (!is.logical(smoothed)) smoothed <- as.logical(smoothed)
     if (!is.integer(polarity)) polarity <- as.integer(polarity)
-    if (!is.data.frame(peakAnnotations)) peakAnnotations <- as.data.frame(peakAnnotations)
-    if (!is.list(metadata)) metadata <- as.list(metadata)
+    if (!all(unlist(lapply(peakAnnotations, is.data.frame))))
+      peakAnnotations <- lapply(peakAnnotations, as.data.frame)
+    if (!all(unlist(lapply(metadata, is.list))))
+      metadata <- lapply(metadata, as.list)
+
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum1 = getClassVersionString("Spectrum1"))
