@@ -21,11 +21,9 @@ setMethod("updateObject", signature(object = "Spectrum"),
               else {
                   to <- new(class(object))
                   if (object@.__classVersion__["Spectrum2"] == "0.1.0") {
-                      torm <- c("smoothed", "polarity", "peakAnnotations", "metadata")
+                      torm <- c("smoothed", "polarity")
                   } else if (object@.__classVersion__["Spectrum2"] == "0.2.0") {
-                      torm <- c("smoothed", "peakAnnotations", "metadata")
-                  } else if (object@.__classVersion__["Spectrum2"] == "0.4.0") {
-                      torm <- c("peakAnnotations", "metadata")
+                      torm <- c("smoothed")
                   }
                   for (sl in .slotNames0(object, torm))
                       slot(to, sl) <- slot(object, sl)
