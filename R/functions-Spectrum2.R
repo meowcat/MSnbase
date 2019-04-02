@@ -260,6 +260,7 @@ Spectra2_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
                  precursorCharge,
                  collisionEnergy,
                  as.integer(nvalues), TRUE,
+                 peakAnnotations, metadata,
                  lapply(versions, .versionToNum),
                  PACKAGE = "MSnbase")
     return(res)
@@ -277,7 +278,9 @@ Spectrum2 <- function(msLevel = 2L, peaksCount = length(mz), rt = numeric(),
                       smoothed = NA, polarity = NA_integer_,
                       merged = 1, precScanNum = NA_integer_,
                       precursorMz = NA, precursorIntensity = NA,
-                      precursorCharge = NA_integer_, collisionEnergy = NA) {
+                      precursorCharge = NA_integer_, collisionEnergy = NA,
+                      peakAnnotations = data.frame(),
+                      metadata = list()) {
     if (tic == 0)
         tic <- sum(intensity)
     ## Ensure that we have the correct data types before passing to C
@@ -299,6 +302,8 @@ Spectrum2 <- function(msLevel = 2L, peaksCount = length(mz), rt = numeric(),
     if (!is.double(precursorIntensity)) precursorIntensity <- as.double(precursorIntensity)
     if (!is.integer(precursorCharge)) precursorCharge <- as.integer(precursorCharge)
     if (!is.double(collisionEnergy)) collisionEnergy <- as.double(collisionEnergy)
+    if (!is.data.frame(peakAnnotations)) peakAnnotations <- as.data.frame(peakAnnotations)
+    if (!is.list(metadata)) metadata <- as.list(metadata)
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum2 = getClassVersionString("Spectrum2"))
@@ -307,7 +312,9 @@ Spectrum2 <- function(msLevel = 2L, peaksCount = length(mz), rt = numeric(),
                  intensity, fromFile, centroided, smoothed, polarity,
                  merged, precScanNum, precursorMz, precursorIntensity,
                  precursorCharge, collisionEnergy,
-                 TRUE, lapply(versions, .versionToNum),
+                 TRUE, 
+                 peakAnnotations, metadata,
+                 lapply(versions, .versionToNum),
                  PACKAGE = "MSnbase")
     return(res)
 }
@@ -324,7 +331,9 @@ Spectrum2_mz_sorted <- function(msLevel = 2L, peaksCount = length(mz), rt = nume
                                 smoothed = NA, polarity = NA_integer_,
                                 merged = 1, precScanNum = NA_integer_,
                                 precursorMz = NA, precursorIntensity = NA,
-                                precursorCharge = NA_integer_, collisionEnergy = NA) {
+                                precursorCharge = NA_integer_, collisionEnergy = NA,
+                                peakAnnotations = data.frame(),
+                                metadata = list()) {
     ## if (tic == 0)
     ##     tic <- sum(intensity)
     ## Ensure that we have the correct data types before passing to C
@@ -346,6 +355,8 @@ Spectrum2_mz_sorted <- function(msLevel = 2L, peaksCount = length(mz), rt = nume
     if (!is.double(precursorIntensity)) precursorIntensity <- as.double(precursorIntensity)
     if (!is.integer(precursorCharge)) precursorCharge <- as.integer(precursorCharge)
     if (!is.double(collisionEnergy)) collisionEnergy <- as.double(collisionEnergy)
+    if (!is.data.frame(peakAnnotations)) peakAnnotations <- as.data.frame(peakAnnotations)
+    if (!is.list(metadata)) metadata <- as.list(metadata)
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum2 = getClassVersionString("Spectrum2"))
@@ -354,6 +365,8 @@ Spectrum2_mz_sorted <- function(msLevel = 2L, peaksCount = length(mz), rt = nume
           intensity, fromFile, centroided, smoothed, polarity,
           merged, precScanNum, precursorMz, precursorIntensity,
           precursorCharge, collisionEnergy,
-          TRUE, lapply(versions, .versionToNum),
+          TRUE, 
+          peakAnnotations, metadata,
+          lapply(versions, .versionToNum),
           PACKAGE = "MSnbase")
 }

@@ -208,6 +208,8 @@ setClass("Spectrum",
              centroided = "logical",
              smoothed = "logical",
              polarity="integer",
+             peakAnnotations="data.frame",
+             metadata="list",
              "VIRTUAL"),
          contains=c("Versioned"),
          prototype = prototype(
@@ -221,7 +223,9 @@ setClass("Spectrum",
              tic = 0,
              scanIndex = integer(),
              mz = numeric(),
-             intensity = numeric()),
+             intensity = numeric(),
+             peakAnnotations = data.frame(),
+             metadata = list()),
          validity = function(object)
              validSpectrum(object)
          )

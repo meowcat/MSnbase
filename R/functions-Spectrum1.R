@@ -16,7 +16,9 @@ Spectrum1 <- function(peaksCount = length(mz), rt = numeric(),
                       tic = 0, mz = numeric(), intensity = numeric(),
                       fromFile = integer(), centroided = NA,
                       smoothed = NA,
-                      polarity = NA_integer_){
+                      polarity = NA_integer_,
+                      peakAnnotations = data.frame(),
+                      metadata = list()){
     if (tic == 0)
         tic <- sum(intensity)
     if (!is.integer(peaksCount)) peaksCount <- as.integer(peaksCount)
@@ -30,12 +32,15 @@ Spectrum1 <- function(peaksCount = length(mz), rt = numeric(),
     if (!is.logical(centroided)) centroided <- as.logical(centroided)
     if (!is.logical(smoothed)) smoothed <- as.logical(smoothed)
     if (!is.integer(polarity)) polarity <- as.integer(polarity)
+    if (!is.data.frame(peakAnnotations)) peakAnnotations <- as.data.frame(peakAnnotations)
+    if (!is.list(metadata)) metadata <- as.list(metadata)
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum1 = getClassVersionString("Spectrum1"))
     res <- .Call("Spectrum1_constructor",
                  1L, peaksCount, rt, acquisitionNum, scanIndex, tic, mz,
                  intensity, fromFile, centroided, smoothed, polarity, TRUE,
+                 peakAnnotations, metadata,
                  lapply(versions, .versionToNum), PACKAGE = "MSnbase")
     return(res)
 }
@@ -59,7 +64,9 @@ Spectrum1_mz_sorted <- function(peaksCount = length(mz), rt = numeric(),
                                 mz = numeric(), intensity = numeric(),
                                 fromFile = integer(),
                                 centroided = NA, smoothed = NA,
-                                polarity = NA_integer_){
+                                polarity = NA_integer_,
+                                peakAnnotations = data.frame(),
+                                metadata = list()){
     if (!is.integer(peaksCount)) peaksCount <- as.integer(peaksCount)
     if (!is.double(rt)) rt <- as.double(rt)
     if (!is.integer(acquisitionNum)) acquisitionNum <- as.integer(acquisitionNum)
@@ -71,12 +78,15 @@ Spectrum1_mz_sorted <- function(peaksCount = length(mz), rt = numeric(),
     if (!is.logical(centroided)) centroided <- as.logical(centroided)
     if (!is.logical(smoothed)) smoothed <- as.logical(smoothed)
     if (!is.integer(polarity)) polarity <- as.integer(polarity)
+    if (!is.data.frame(peakAnnotations)) peakAnnotations <- as.data.frame(peakAnnotations)
+    if (!is.list(metadata)) metadata <- as.list(metadata)
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum1 = getClassVersionString("Spectrum1"))
     .Call("Spectrum1_constructor_mz_sorted",
           1L, peaksCount, rt, acquisitionNum, scanIndex, tic, mz,
           intensity, fromFile, centroided, smoothed, polarity, TRUE,
+          peakAnnotations, metadata,
           lapply(versions, .versionToNum), PACKAGE="MSnbase")
 }
 
@@ -92,7 +102,9 @@ Spectra1_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
                                mz = numeric(),
                                intensity = numeric(), fromFile = integer(),
                                centroided = logical(), smoothed = logical(),
-                               polarity = integer(), nvalues = integer()) {
+                               polarity = integer(), nvalues = integer(),
+                               peakAnnotations = data.frame(),
+                               metadata = list()) {
     ## Fix issue #215: remove check to allow empty spectra
     ## if (length(mz) == 0 | length(intensity) == 0 | length(nvalues) == 0) {
     ##     stop("Arguments 'mz', 'intensity' and 'nvalues' are required!")
@@ -176,6 +188,8 @@ Spectra1_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
     if (!is.logical(centroided)) centroided <- as.logical(centroided)
     if (!is.logical(smoothed)) smoothed <- as.logical(smoothed)
     if (!is.integer(polarity)) polarity <- as.integer(polarity)
+    if (!is.data.frame(peakAnnotations)) peakAnnotations <- as.data.frame(peakAnnotations)
+    if (!is.list(metadata)) metadata <- as.list(metadata)
     ## Define the class versions.
     versions <- list(Spectrum = getClassVersionString("Spectrum"),
                      Spectrum1 = getClassVersionString("Spectrum1"))
@@ -192,6 +206,7 @@ Spectra1_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
           smoothed,
           polarity,
           as.integer(nvalues), TRUE,
+          peakAnnotations, metadata,
           lapply(versions, .versionToNum),
           PACKAGE = "MSnbase")
 }

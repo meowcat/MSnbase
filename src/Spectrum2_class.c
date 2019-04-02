@@ -12,7 +12,8 @@ static SEXP _new_Spectrum2(SEXP msLevel, SEXP peaksCount, SEXP rt,
 			   SEXP centroided, SEXP smoothed, SEXP polarity,
 			   SEXP merged, SEXP precScanNum, SEXP precursorMz,
 			   SEXP precursorIntensity, SEXP precursorCharge,
-			   SEXP collisionEnergy)
+			   SEXP collisionEnergy,
+			   SEXP peakAnnotations, SEXP metadata)
 {
   SEXP classdef, ans;
   if (asInteger(msLevel) < 2)
@@ -40,6 +41,8 @@ static SEXP _new_Spectrum2(SEXP msLevel, SEXP peaksCount, SEXP rt,
   R_do_slot_assign(ans, install("precursorIntensity"), precursorIntensity);
   R_do_slot_assign(ans, install("precursorCharge"), precursorCharge);
   R_do_slot_assign(ans, install("collisionEnergy"), collisionEnergy);
+  R_do_slot_assign(ans, install("peakAnnotations"), peakAnnotations);
+  R_do_slot_assign(ans, install("metadata"), metadata);
   UNPROTECT(2);
   return(ans);
 }
@@ -55,6 +58,7 @@ static SEXP _new_versioned_Spectrum2(SEXP msLevel, SEXP peaksCount, SEXP rt,
 				     SEXP merged, SEXP precScanNum,
 				     SEXP precursorMz, SEXP precursorIntensity,
 				     SEXP precursorCharge, SEXP collisionEnergy,
+				     SEXP peakAnnotations, SEXP metadata,
 				     SEXP versions)
 {
   SEXP classdef, ans, vers_classdef, vers;
@@ -84,6 +88,8 @@ static SEXP _new_versioned_Spectrum2(SEXP msLevel, SEXP peaksCount, SEXP rt,
   ans = R_do_slot_assign(ans, install("precursorIntensity"), precursorIntensity);
   ans = R_do_slot_assign(ans, install("precursorCharge"), precursorCharge);
   ans = R_do_slot_assign(ans, install("collisionEnergy"), collisionEnergy);
+  ans = R_do_slot_assign(ans, install("peakAnnotations"), peakAnnotations);
+  ans = R_do_slot_assign(ans, install("metadata"), metadata);
 
   // Create the class version; version is supposed to be a NAMED LIST!!!
   PROTECT(vers_classdef = R_getClassDef("Versions"));
@@ -106,7 +112,8 @@ static SEXP _new_Spectrum2_memsafe(SEXP msLevel, SEXP peaksCount, SEXP rt,
 				   SEXP centroided, SEXP smoothed, SEXP polarity,
 				   SEXP merged, SEXP precScanNum, SEXP precursorMz,
 				   SEXP precursorIntensity, SEXP precursorCharge,
-				   SEXP collisionEnergy)
+				   SEXP collisionEnergy,
+				   SEXP peakAnnotations, SEXP metadata)
 {
   SEXP classdef, ans;
   if (asInteger(msLevel) < 2)
@@ -135,6 +142,8 @@ static SEXP _new_Spectrum2_memsafe(SEXP msLevel, SEXP peaksCount, SEXP rt,
   R_do_slot_assign(ans, PROTECT(install("precursorIntensity")), precursorIntensity);
   R_do_slot_assign(ans, PROTECT(install("precursorCharge")), precursorCharge);
   R_do_slot_assign(ans, PROTECT(install("collisionEnergy")), collisionEnergy);
+  R_do_slot_assign(ans, PROTECT(install("peakAnnotations")), peakAnnotations);
+  PROTECT(R_do_slot_assign(ans, install("metadata"), metadata));
   UNPROTECT(21);
   return(ans);
 }
@@ -151,7 +160,9 @@ SEXP Spectrum2_constructor(SEXP msLevel, SEXP peaksCount, SEXP rt,
 			   SEXP centroided, SEXP smoothed, SEXP polarity,
 			   SEXP merged, SEXP precScanNum, SEXP precursorMz,
 			   SEXP precursorIntensity, SEXP precursorCharge,
-			   SEXP collisionEnergy, SEXP check, SEXP versions)
+			   SEXP collisionEnergy, SEXP check, 
+			   SEXP peakAnnotations, SEXP metadata,
+			   SEXP versions)
 {
   //int nvalues;
   SEXP ans;
@@ -169,7 +180,9 @@ SEXP Spectrum2_constructor(SEXP msLevel, SEXP peaksCount, SEXP rt,
 					 centroided, smoothed, polarity, merged,
 					 precScanNum, precursorMz,
 					 precursorIntensity, precursorCharge,
-					 collisionEnergy, versions));
+					 collisionEnergy, 
+					 peakAnnotations, metadata,
+					 versions));
   UNPROTECT(1);
   return(ans);
   return R_NilValue;
@@ -183,7 +196,9 @@ SEXP Spectrum2_constructor_mz_sorted(SEXP msLevel, SEXP peaksCount, SEXP rt,
 				     SEXP precScanNum, SEXP precursorMz,
 				     SEXP precursorIntensity,
 				     SEXP precursorCharge, SEXP collisionEnergy,
-				     SEXP check, SEXP versions)
+				     SEXP check, 
+				     SEXP peakAnnotations, SEXP metadata,
+				     SEXP versions)
 {
   //int nvalues;
   SEXP ans, oMz, oInt;
@@ -229,6 +244,7 @@ SEXP Spectrum2_constructor_mz_sorted(SEXP msLevel, SEXP peaksCount, SEXP rt,
 					 smoothed, polarity, merged, precScanNum,
 					 precursorMz, precursorIntensity,
 					 precursorCharge, collisionEnergy,
+					 peakAnnotations, metadata,
 					 versions));
   UNPROTECT(4);
   return(ans);
@@ -269,6 +285,7 @@ SEXP Multi_Spectrum2_constructor_mz_sorted(SEXP msLevel,
 					   SEXP collisionEnergy,
 					   SEXP nvalues,
 					   SEXP check,
+					   SEXP peakAnnotations, SEXP metadata,
 					   SEXP versions)
 {
   int n = LENGTH(nvalues);
@@ -359,6 +376,7 @@ SEXP Multi_Spectrum2_constructor_mz_sorted(SEXP msLevel,
 					    PROTECT(ScalarReal(p_precursorIntensity[i])),
 					    PROTECT(ScalarInteger(p_precursorCharge[i])),
 					    PROTECT(ScalarReal(p_collisionEnergy[i])),
+					    peakAnnotations, metadata,
 					    versions));
     UNPROTECT(19);
     startN = startN + currentN;
@@ -388,7 +406,8 @@ SEXP Multi_Spectrum2_constructor_mz_sorted_memsafe(SEXP msLevel,
 						   SEXP precursorCharge,
 						   SEXP collisionEnergy,
 						   SEXP nvalues,
-						   SEXP check)
+						   SEXP check,
+						   SEXP peakAnnotations, SEXP metadata)
 {
   int n = LENGTH(nvalues);
   int currentN = 0;
@@ -476,7 +495,9 @@ SEXP Multi_Spectrum2_constructor_mz_sorted_memsafe(SEXP msLevel,
 					      PROTECT(ScalarReal(p_precursorMz[i])),
 					      PROTECT(ScalarReal(p_precursorIntensity[i])),
 					      PROTECT(ScalarInteger(p_precursorCharge[i])),
-					      PROTECT(ScalarReal(p_collisionEnergy[i]))));
+					      PROTECT(ScalarReal(p_collisionEnergy[i])),
+					      peakAnnotations, metadata)
+    );
     SET_VECTOR_ELT(out, i, spectrum);
     UNPROTECT(20); /*cMz, cIntensity, orderMz, spectrum*/
     startN = startN + currentN;
