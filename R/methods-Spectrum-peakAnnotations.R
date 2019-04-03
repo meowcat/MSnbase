@@ -173,7 +173,7 @@ setMethod("peakAnnotation", c("Spectrum", "character"), function(o, name)
   # {
   #   value <- FUN(as.data.frame(o))
   # }
-  if(class == "") class <- class(value)
+  
 
   if(!(name %in% colnames(o@peakAnnotations)) & !addNew)
   {
@@ -183,7 +183,11 @@ setMethod("peakAnnotation", c("Spectrum", "character"), function(o, name)
   
   if(ncol(o@peakAnnotations) == 0)
     o@peakAnnotations <- data.frame(row.names = seq_len(o@peaksCount))
+  # to enable operation on Spectra etc.
+  if(class(value) == "function")
+    value <- value(o)
   
+  if(class == "") class <- class(value)
   if(length(value) == 1)
     o@peakAnnotations[,name] <- as(rep(value, o@peaksCount), class)
   else if(length(value) == o@peaksCount)
@@ -211,7 +215,7 @@ setMethod("peakAnnotations", c("Spectrum"),
             name <- colnames(o@peakAnnotations)
             class <- unlist(lapply(
               name,
-              class(o@peakAnnotations[,name])
+              function(col) class(o@peakAnnotations[,col])
             )) 
             
             data.frame(name=name, class=class) 
