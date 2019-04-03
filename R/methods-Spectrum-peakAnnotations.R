@@ -81,30 +81,31 @@ setMethod("setData", c("Spectrum", "data.frame"), function(o, df,
   deletedAnn <- setdiff(existingAnn, replacementAnn)
   newAnn <- setdiff(replacementAnn, existingAnn)
   
-  # For the matching annotations, check class then set
-  for(ann in matchingAnn)
-  {
-    if(class(df[,ann]) != class(o@peakAnnotations[,ann]))
-      stop(paste0("Annotation class mismatch for ", ann, ": ",
-                  class(df[,ann]),class(o@peakAnnotations[,ann])))
-      o@peakAnnotations[,ann] <- df[,ann]
-  }
-  
+
   # For the new annotations:
   # * in strict mode: fail if addNew is disallowed
   # * in loose mode: silently drop columns if addNew is disallowed
-  # * if addNew: add annotation columns for new columns
+  # * if addNew: include annotation columns for new columns
   if(length(newAnn) > 0)
   {
     if(strict & !addNew)
       stop("In strict mode, no implicit dropping of peak annotation columns is permitted. Set strict=FALSE or addNew=TRUE")
     if(addNew)
-      for(ann in newAnn)
-      {
-        # todo: improve this one for performance
-        o <- addPeakAnnotation(o, newAnn, class(df[,ann]), df[,ann])
-      }
+      matchingAnn <- c(matchingAnn, newAnn)
   }
+  
+  # For the matching (and evtl new) annotations, check class
+  for(ann in matchingAnn)
+  {
+    if(class(df[,ann]) != class(o@peakAnnotations[,ann]))
+      stop(paste0("Annotation class mismatch for ", ann, ": ",
+                  class(df[,ann]),class(o@peakAnnotations[,ann])))
+  }
+  
+  
+  df_new <- df[,matchingAnn,drop=FALSE]
+  
+
 
   # For the dropped annotations:
   # * in strict mode: fail if clean is disabled
@@ -114,10 +115,16 @@ setMethod("setData", c("Spectrum", "data.frame"), function(o, df,
   {
     if(strict & !clean)
       stop("In strict mode, no implicit preservation of existing peakAnnotation columns is permitted. Set strict=FALSE or clean=TRUE")
-    if(clean)
-      for(ann in deletedAnn)
-        o@peakAnnotations[,ann] <- NULL
+    if(!clean)
+    {
+      if(nrow(df) != nrow(o@peakAnnotations))
+        stop("In non-strict mode, implicit preservation of columns is impossible if peak number changes")
+      df_new[,deletedAnn] <- o@peakAnnotations[,deletedAnn]
+    }
   }
+  
+  o@peakAnnotations <- df_new
+  
   o
 }
 
@@ -142,19 +149,7 @@ setMethod("setData", c("Spectrum", "data.frame"), function(o, df,
           c("Spectrum", "character", "character", "ANY"), 
           function(o, name, type, value=NA, FUN=NULL)
 {
-  if(!is.null(FUN))
-  {
-    value <- FUN(as.data.frame(o))
-  }
-  if(ncol(o@peakAnnotations) == 0)
-    o@peakAnnotations <- data.frame(row.names = seq_len(o@peaksCount))
-  if(length(value) == 1)
-    o@peakAnnotations[,name] <- as(rep(value, o@peaksCount), type)
-  else if(length(value) == o@peaksCount)
-    o@peakAnnotations[,name] <- value
-  else
-    stop("Incorrect length for annotation")
-  o
+  peakAnnotation(o, name, addNew = TRUE) <- value
 })
 
 #setGeneric("setData",	function(s, df, ...) standardGeneric("setData"))
@@ -163,8 +158,8 @@ setMethod("setData", c("Spectrum", "data.frame"), function(o, df,
 #' @export
 setMethod("peakAnnotation", c("Spectrum", "character"), function(o, name)
 {
-  if(peakAnnotation %in% colnames(o@peakAnnotations))
-    return(o@peakAnnotation[,name])
+  if(name %in% colnames(o@peakAnnotations))
+    return(o@peakAnnotations[,name])
   else
     # We can't use FALSE or NA, since it could be confused with a 1-length logical FALSE or 1-length ANY NA  
     warning("Selected an inexistent peakAnnotation column")
@@ -172,30 +167,30 @@ setMethod("peakAnnotation", c("Spectrum", "character"), function(o, name)
 })
 
 
-.peakAnnotationSet <- function(o, name, value, FUN = NULL, addNew = FALSE, class="")
+.peakAnnotationSet <- function(o, name, value, addNew = FALSE, class="")
 {
-  if(!is.null(FUN))
-  {
-    value <- FUN(as.data.frame(o))
-  }
+  # if(!is.null(FUN))
+  # {
+  #   value <- FUN(as.data.frame(o))
+  # }
   if(class == "") class <- class(value)
-  if(length(value) != o@peaksCount)
-    stop("Incorrect number of entries in value")
-  if(!(name %in% colnames(o@peakAnnotation)) & !addNew)
+
+  if(!(name %in% colnames(o@peakAnnotations)) & !addNew)
   {
     warning("Trying to set inexistent annotation. To enable autogeneration, set addNew = TRUE.")
     return(o)
   }
-  else if(!(name %in% colnames(o@peakAnnotations)))
-    o <- addPeakAnnotation(o, name, class)
+  
+  if(ncol(o@peakAnnotations) == 0)
+    o@peakAnnotations <- data.frame(row.names = seq_len(o@peaksCount))
   
   if(length(value) == 1)
-    o@peakAnnotations[,name] <- as(rep(value, o@peaksCount), type)
+    o@peakAnnotations[,name] <- as(rep(value, o@peaksCount), class)
   else if(length(value) == o@peaksCount)
     o@peakAnnotations[,name] <- value
   else
     stop("Incorrect length for annotation")
-  
+
   return(o)
 }
 

@@ -44,7 +44,7 @@ setGeneric("addPeakAnnotation", function(o, name, type, value=NA, FUN=NULL) stan
 setGeneric("peakAnnotation", function(o, name) standardGeneric("peakAnnotation"))
 
 #' @export
-setGeneric("peakAnnotation<-", function(o, name, value, FUN, addNew = FALSE, class="")
+setGeneric("peakAnnotation<-", function(o, name, value, addNew = FALSE, class="")
   standardGeneric("peakAnnotation<-"))
 
 # Get and set the set of annotations in the object
