@@ -155,9 +155,16 @@ setMethod("polarity", "Spectrum",
 
 setAs("Spectrum", "data.frame",
       function (from)
-          data.frame(mz = mz(from),
+      {
+          df <- data.frame(mz = mz(from),
                      i = intensity(from))
-      )
+        if(nrow(from@peakAnnotations) == from@peaksCount)
+          df <- cbind(df, from@peakAnnotations)
+        else if(nrow(from@peakAnnotations) > 0)
+          stop("Incorrect number of rows in peakAnnotations.")
+        return(df)
+      })
+
 
 as.data.frame.Spectrum <- function(x, row.names=NULL, optional=FALSE, ...)
     as(x, "data.frame")

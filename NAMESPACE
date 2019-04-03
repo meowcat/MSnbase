@@ -310,7 +310,15 @@ exportMethods(updateObject,
               writeMSData,
               productMz,
               estimateMzResolution,
-	      combineSpectra
+	      combineSpectra,
+	            # peakAnnotations
+	      selectPeaks,
+	      addPeakAnnotation,
+	      peakAnnotation,
+	      "peakAnnotation<-",
+	      setData,
+	      peakAnnotations
+	      
               )
 
 ## methods NOT exported
