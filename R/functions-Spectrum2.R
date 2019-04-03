@@ -95,7 +95,9 @@ Spectra2_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
                                precursorIntensity = numeric(),
                                precursorCharge = integer(),
                                collisionEnergy = numeric(),
-                               nvalues = integer()) {
+                               nvalues = integer(),
+                               peakAnnotations = data.frame(),
+                               metadata = list()) {
     ## Argument check; make sure all is OK before calling C.
     ## Fix issue #215: remove check to allow empty spectra
     ## if (length(mz) == 0 | length(intensity) == 0 | length(nvalues) == 0) {
@@ -219,7 +221,7 @@ Spectra2_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
         if (length(collisionEnergy) != nvals)
             stop("Length of 'collisionEnergy' has to match the length of 'nvalues'!")
     }
-    
+
     # metadata and peakAnnotations
     if (!length(metadata)) {
       metadata <- replicate(nvals, list())
@@ -233,10 +235,7 @@ Spectra2_mz_sorted <- function(peaksCount = NULL, rt = numeric(),
       if (length(peakAnnotations) != nvals)
         stop("Length of 'peakAnnotations' has to match length of 'nvalues'!")
     }
-    
-    
-    
-    
+
     ## Ensure that we have the correct data types before passing to C
     if (!is.integer(msLevel)) msLevel <- as.integer(msLevel)
     if (!is.integer(peaksCount)) peaksCount <- as.integer(peaksCount)
@@ -334,7 +333,7 @@ Spectrum2 <- function(msLevel = 2L, peaksCount = length(mz), rt = numeric(),
                  intensity, fromFile, centroided, smoothed, polarity,
                  merged, precScanNum, precursorMz, precursorIntensity,
                  precursorCharge, collisionEnergy,
-                 TRUE, 
+                 TRUE,
                  peakAnnotations, metadata,
                  lapply(versions, .versionToNum),
                  PACKAGE = "MSnbase")
@@ -387,7 +386,7 @@ Spectrum2_mz_sorted <- function(msLevel = 2L, peaksCount = length(mz), rt = nume
           intensity, fromFile, centroided, smoothed, polarity,
           merged, precScanNum, precursorMz, precursorIntensity,
           precursorCharge, collisionEnergy,
-          TRUE, 
+          TRUE,
           peakAnnotations, metadata,
           lapply(versions, .versionToNum),
           PACKAGE = "MSnbase")
