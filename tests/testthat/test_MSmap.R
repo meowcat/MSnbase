@@ -51,7 +51,7 @@ test_that("MSmap from mzRpwiz and OnDiskMSnExp", {
     M1 <- MSmap(msn, rtsel, 110, 112, .005)
     ## compare
     M0@call <- M1@call
-    expect_equal(M0, M1, check.attributes = FALSE)    
+    expect_equal(M0, M1, check.attributes = FALSE)
 })
 
 test_that("map data.frame", {

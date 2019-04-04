@@ -308,7 +308,10 @@ test_that(".spectrum_header works", {
     expect_true(all(colnames(hdr) %in% colnames(hdr_1)))
     cns <- colnames(hdr)
     cns <- cns[!(cns %in% c("basePeakMZ", "basePeakIntensity", "injectionTime",
-                            "filterString", "spectrumId"))]
+                            "filterString", "spectrumId",
+                            "isolationWindowTargetMZ",
+                            "isolationWindowLowerOffset",
+                            "isolationWindowUpperOffset"))]
     for (cn in cns)
         expect_equal(hdr[1, cn], hdr_1[1, cn])
 

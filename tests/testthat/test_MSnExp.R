@@ -15,7 +15,7 @@ test_that("readMSData", {
              full.name = TRUE, pattern = "msx.rda")
     load(f) ## msx
     file <- dir(system.file(package = "MSnbase", dir = "extdata"),
-                full.name = TRUE,pattern = "mzXML$")
+                full.name = TRUE, pattern = "mzXML$")
     aa <- readMSData(file, verbose = FALSE, centroided. = FALSE)
     expect_identical(as.list(assayData(aa)), as.list(assayData(msx)))
     ## ## removing below due to spurious error on windows
@@ -326,7 +326,7 @@ test_that("isolation window", {
 test_that("spectrapply,MSnExp", {
     library(msdata)
     inMem <- microtofq_in_mem_ms1
-    
+
     sps <- spectra(inMem)
     sps_2 <- spectrapply(inMem)
     expect_identical(sps, sps_2)
@@ -388,7 +388,7 @@ test_that("phenoData<- on MSnExp works", {
     ## Assign NAnnotatedDataFrame
     phenoData(im) <- pd_2
     expect_true(is(im@phenoData, "NAnnotatedDataFrame"))
-    expect_equal(phenoData(im), pd_2)    
+    expect_equal(phenoData(im), pd_2)
 })
 
 test_that("injection time", {
@@ -404,7 +404,7 @@ test_that("chromatogram,MSnExp works", {
     ## Reduce here the tests. Most of the tests are performed in
     ## chromatogram,OnDiskMSnExp and both methods use the same low level
     ## function.
-    
+
     ## Multiple mz ranges.
     mzr <- matrix(c(100, 120, 200, 220, 300, 320), nrow = 3, byrow = TRUE)
     rtr <- matrix(c(50, 300), nrow = 1)
@@ -437,7 +437,7 @@ test_that("chromatogram,MSnExp works", {
     expect_equal(fData(res)$mzmin, c(100, 200, 300))
     expect_equal(fData(res)$mzmax, c(120, 220, 320))
     expect_equal(fData(res)$polarity, c(1, 1, 1))
-    
+
     ## Now with ranges for which we don't have values in one or the other.
     rtr <- matrix(c(280, 300, 20, 40), nrow = 2,
                   byrow = TRUE)  ## Only present in first, or 2nd file
@@ -536,7 +536,7 @@ test_that("estimateMzScattering works", {
 test_that("combineSpectraMovingWindow works", {
     ## Check errors
     expect_error(combineSpectraMovingWindow("3"))
-    
+
     od <- filterFile(sciex, 1)
     ## Focus on the one with most peaks
     idx <- which.max(peaksCount(od))
@@ -548,7 +548,7 @@ test_that("combineSpectraMovingWindow works", {
     ## Should be different from raw ones
     expect_true(is.character(all.equal(mz(spctr), mz(od[[4]]))))
     expect_true(is.character(all.equal(intensity(spctr), intensity(od[[4]]))))
-    
+
     ## Use pre-calculated mzd:
     mzd <- estimateMzScattering(od)
     ## If mzd is estimated on mz and combination on sqrt(mz) it will fail.
@@ -560,7 +560,7 @@ test_that("combineSpectraMovingWindow works", {
     spctr_comb <- od_comb[[4]]
     expect_equal(mz(spctr_comb), mz(spctr))
     expect_equal(intensity(spctr_comb), intensity(spctr))
-    
+
     ## Estimate on the sqrt(mz)
     mzd <- estimateMzScattering(od, timeDomain = TRUE)
     od_comb <- combineSpectraMovingWindow(od, mzd = mzd[[4]], timeDomain = TRUE)
@@ -571,7 +571,7 @@ test_that("combineSpectraMovingWindow works", {
     spctr_raw <- od[[4]]
     expect_true(is.character(all.equal(mz(spctr), mz(spctr_raw))))
     expect_true(is.character(all.equal(intensity(spctr), intensity(spctr_raw))))
-    
+
     ## Shouldn't make a difference if we're using timeDomain = TRUE or FALSE.
     od_comb <- combineSpectraMovingWindow(od)
     spctr_comb <- od_comb[[4]]

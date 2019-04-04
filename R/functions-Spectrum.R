@@ -551,6 +551,9 @@ validSpectrum <- function(object) {
                       spectrumId = paste0("scan=", acquisitionNum(x)),
                       centroided = centroided(x),
                       ionMobilityDriftTime = NA_real_,
+                      isolationWindowTargetMZ = NA_real_,
+                      isolationWindowLowerOffset = NA_real_,
+                      isolationWindowUpperOffset = NA_real_,
                       stringsAsFactors = FALSE
                       )
     if (msLevel(x) > 1) {

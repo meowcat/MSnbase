@@ -30,8 +30,8 @@ static SEXP _new_Spectrum1(SEXP msLevel, SEXP peaksCount, SEXP rt,
   PROTECT(R_do_slot_assign(ans, install("polarity"), polarity));
   PROTECT(R_do_slot_assign(ans, install("peakAnnotations"), peakAnnotations));
   PROTECT(R_do_slot_assign(ans, install("metadata"), metadata));
-  
-  UNPROTECT(14);
+
+  UNPROTECT(16);
   //  UNPROTECT(2);
   return ans;
 }
@@ -64,7 +64,7 @@ static SEXP _new_versioned_Spectrum1(SEXP msLevel, SEXP peaksCount, SEXP rt,
   PROTECT(ans = R_do_slot_assign(ans, install("polarity"), polarity));
   PROTECT(ans = R_do_slot_assign(ans, install("peakAnnotations"), peakAnnotations));
   PROTECT(ans = R_do_slot_assign(ans, install("metadata"), metadata));
-  
+
   // Create the class version; version is supposed to be a NAMED LIST!!!
   PROTECT(vers_classdef = R_getClassDef("Versions"));
   PROTECT(vers = R_do_new_object(vers_classdef));
@@ -72,7 +72,7 @@ static SEXP _new_versioned_Spectrum1(SEXP msLevel, SEXP peaksCount, SEXP rt,
   // Assign the version
   PROTECT(ans = R_do_slot_assign(ans, install(".__classVersion__"), vers));
 
-  UNPROTECT(18);
+  UNPROTECT(20);
   return ans;
 }
 
@@ -93,8 +93,8 @@ SEXP Spectrum1_constructor(SEXP msLevel, SEXP peaksCount, SEXP rt,
   }
   PROTECT(ans = _new_versioned_Spectrum1(msLevel, peaksCount, rt, acquisitionNum,
 					 scanIndex, tic, mz, intensity, fromFile,
-					 centroided, smoothed, polarity, peakAnnotations, metadata,
-					 versions));
+					 centroided, smoothed, polarity,
+					 peakAnnotations, metadata, versions));
   UNPROTECT(1);
   return(ans);
 }

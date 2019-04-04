@@ -57,7 +57,7 @@ Author: Laurent Gatto, Johannes Rainer and Sebastian Gibb with
     Clement.
 Maintainer: Laurent Gatto <lg390@cam.ac.uk>
 Depends:
-    R (>= 3.1),
+    R (>= 3.5.0),
     methods,
     BiocGenerics (>= 0.7.1),
     Biobase (>= 2.15.2),
